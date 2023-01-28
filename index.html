@@ -29,8 +29,7 @@
         .menu {
             transition: 400ms;
             height: 30px;
-            overflow: hidden;
-            overflow-y: auto;
+            overflow-y: hidden;
         }
 
         input {
@@ -78,53 +77,7 @@
         <input type="time" id="time" class="rq" name="entry.1519103396" required>
         <div class="menu">
             <span class="selectDishes">Выберете блюда <span class="selectDishes__button">+</span></span>
-            <ul class="menu__list">
-                <li>
-                    <span class="name">Суп</span>
-                    <span class="price">3</span>$
-                    <span class="count">
-                        <button class="minus" type="button">-</button>
-                        <span class="countNum">0</span>
-                        <button class="pluse" type="button">+</button>
-                    </span>
-                </li>
-                <li>
-                    <span class="name">Салат</span>
-                    <span class="price">1.5</span>$
-                    <span class="count">
-                        <button class="minus" type="button">-</button>
-                        <span class="countNum">0</span>
-                        <button class="pluse" type="button">+</button>
-                    </span>
-                </li>
-                <li>
-                    <span class="name">Хлеб</span>
-                    <span class="price">1</span>$
-                    <span class="count">
-                        <button class="minus" type="button">-</button>
-                        <span class="countNum">0</span>
-                        <button class="pluse" type="button">+</button>
-                    </span>
-                </li>
-                <li>
-                    <span class="name">Курица</span>
-                    <span class="price">10</span>$
-                    <span class="count">
-                        <button class="minus" type="button">-</button>
-                        <span class="countNum">0</span>
-                        <button class="pluse" type="button">+</button>
-                    </span>
-                </li>
-                <li>
-                    <span class="name">Курица2</span>
-                    <span class="price">10</span>$
-                    <span class="count">
-                        <button class="minus" type="button">-</button>
-                        <span class="countNum">0</span>
-                        <button class="pluse" type="button">+</button>
-                    </span>
-                </li>
-            </ul>
+            <ul class="menu__list"></ul>
         </div>
         <textarea type="text" class=" hidden" name="entry.847152116"></textarea>
         <input type="text" class="rq hidden maincost" name="entry.1245408083">
@@ -133,12 +86,36 @@
         <button class="oformit" type="submit" disabled>Оформить заказ</button>
     </form>
     <script>
+        //Пример: "  {price:цена, name:'название'},  "
+        let menuMas = [
+            {price:10,name:'Салат'},
+            {price:5.5,name:'НеСалат'},
+            {price:6,name:'Курица'},
+            {price:15,name:'НеКурица'},
+            {price:3,name:'Суп'},
+            /*👈Пишите слева*/
+        ];
         let menu = document.querySelector('.menu');
         let menuList = document.querySelector('.menu__list');
         let booking = {};
         let preview = document.querySelector('.preview');
         let inputForForm = document.querySelector('textarea.hidden');
         let mainCost = document.querySelector('input.maincost');
+        menuMas.forEach(el =>{
+            let newO = document.createElement('li');
+            newO.innerHTML = `
+                <li>
+                    <span class="name">${el.name}</span>
+                    <span class="price">${el.price}</span>$
+                    <span class="count">
+                        <button class="minus" type="button">-</button>
+                        <span class="countNum">0</span>
+                        <button class="pluse" type="button">+</button>
+                    </span>
+                </li>
+            `
+            menuList.appendChild(newO);
+        });
         document.querySelector('.oformit').onclick = function (e, target = e.target) {
             target.innerHTML = '<b>Заказ оформлен</b>';
             setTimeout(() => {
@@ -192,10 +169,12 @@
         document.querySelector('.selectDishes').onclick = function () {
             if (menu.offsetHeight == 30) {
                 menu.style.height = '100px';
+                menu.style.overflowY = 'auto';
                 menuList.style.marginTop = '3px';
                 document.querySelector('.selectDishes__button').innerHTML = '-';
             } else {
                 menu.style.height = '30px';
+                menu.style.overflowY = 'hidden';
                 menuList.style.marginTop = '12px';
                 document.querySelector('.selectDishes__button').innerHTML = '+';
             };
@@ -230,6 +209,5 @@
         });
     </script>
 </body>
-<!-- 👍🤣😁 -->
 
 </html>
