@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="ru">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title></title>
+</head>
+
+<body>
+    <style>
+        * {
+            font-family: sans-serif;
+            box-sizing: border-box;
+        }
+
+        form {
+            width: 100%;
+            max-width: 520px;
+            border: 1px solid black;
+            padding: 8px;
+        }
+
+        h3 {
+            text-align: center;
+        }
+
+        .menu {
+            transition: 400ms;
+            height: 30px;
+            overflow: hidden;
+            overflow-y: auto;
+        }
+
+        input {
+            width: 100%;
+        }
+
+        .hidden {
+            display: none;
+            white-space: pre-wrap;
+        }
+
+        button[type=submit] {
+            width: 100%;
+        }
+
+        .selectDishes {
+            user-select: none;
+            cursor: pointer;
+        }
+
+        .menu__list {
+            transition: 400ms;
+            margin-top: 12px;
+        }
+
+        .cost {
+            margin-left: 80%;
+        }
+    </style>
+    <form target="test"
+        action="https://docs.google.com/forms/u/2/d/e/1FAIpQLSdi1c9XkXdp9Ea6Etd5Hix5EWpk_bjJoWufDVHLe3XFj6SpHA/formResponse">
+        <h3>Оформите заказ</h3>
+        <iframe name="test" class="hidden"></iframe>
+        <label for="name">Имя:</label>
+        <input type="text" id="name" class="rq" name="entry.523705913" required>
+        <label for="phone">Телефон:</label>
+        <input type="tel" id="phone" class="rq" name="entry.1051261082" required>
+        <label for="mail">Почта:</label>
+        <input type="email" id="mail" name="entry.2024210621">
+        <label for="adress">Адрес:</label>
+        <input type="text" id="adress" class="rq" name="entry.1505171548" required>
+        <label for="date">Когда привезти:</label>
+        <input type="date" id="date" class="rq" name="entry.1309105978" required>
+        <label for="time">В какое время:</label>
+        <input type="time" id="time" class="rq" name="entry.1519103396" required>
+        <div class="menu">
+            <span class="selectDishes">Выберете блюда <span class="selectDishes__button">+</span></span>
+            <ul class="menu__list">
+                <li>
+                    <span class="name">Суп</span>
+                    <span class="price">3</span>$
+                    <span class="count">
+                        <button class="minus" type="button">-</button>
+                        <span class="countNum">0</span>
+                        <button class="pluse" type="button">+</button>
+                    </span>
+                </li>
+                <li>
+                    <span class="name">Салат</span>
+                    <span class="price">1.5</span>$
+                    <span class="count">
+                        <button class="minus" type="button">-</button>
+                        <span class="countNum">0</span>
+                        <button class="pluse" type="button">+</button>
+                    </span>
+                </li>
+                <li>
+                    <span class="name">Хлеб</span>
+                    <span class="price">1</span>$
+                    <span class="count">
+                        <button class="minus" type="button">-</button>
+                        <span class="countNum">0</span>
+                        <button class="pluse" type="button">+</button>
+                    </span>
+                </li>
+                <li>
+                    <span class="name">Курица</span>
+                    <span class="price">10</span>$
+                    <span class="count">
+                        <button class="minus" type="button">-</button>
+                        <span class="countNum">0</span>
+                        <button class="pluse" type="button">+</button>
+                    </span>
+                </li>
+                <li>
+                    <span class="name">Курица2</span>
+                    <span class="price">10</span>$
+                    <span class="count">
+                        <button class="minus" type="button">-</button>
+                        <span class="countNum">0</span>
+                        <button class="pluse" type="button">+</button>
+                    </span>
+                </li>
+            </ul>
+        </div>
+        <textarea type="text" class=" hidden" name="entry.847152116"></textarea>
+        <input type="text" class="rq hidden maincost" name="entry.1245408083">
+        <h4>Ваш заказ</h4>
+        <ul class="preview"></ul>
+        <button class="oformit" type="submit" disabled>Оформить заказ</button>
+    </form>
+    <script>
+        let menu = document.querySelector('.menu');
+        let menuList = document.querySelector('.menu__list');
+        let booking = {};
+        let preview = document.querySelector('.preview');
+        let inputForForm = document.querySelector('textarea.hidden');
+        let mainCost = document.querySelector('input.maincost');
+        document.querySelector('.oformit').onclick = function (e, target = e.target) {
+            target.innerHTML = '<b>Заказ оформлен</b>';
+            setTimeout(() => {
+                target.innerHTML = 'Оформить заказ';
+                location.reload();
+            }, 2000);
+        };
+        for (let i = 0; i < document.querySelectorAll('input').length; i++) {
+            const el = document.querySelectorAll('input')[i];
+            el.oninput = function () {
+                proverka();
+            };
+        };
+        function proverka(cost) {
+            let x = 0;
+            for (let ii = 0; ii < document.getElementsByClassName('rq').length; ii++) {
+                const el = document.getElementsByClassName('rq')[ii];
+                if (el.value == '') {
+                    x++;
+                };
+            };
+            let re = /^[\d\+][\d\(\)\ -]{4,14}\d$/;
+            let myPhone = document.getElementById('phone').value;
+            let valid = re.test(myPhone);
+            document.querySelector('.oformit').disabled = false;
+            if (x == 0 && valid && cost != 0) {
+                document.querySelector('.oformit').disabled = false;
+            } else {
+                document.querySelector('.oformit').disabled = true;
+            };
+        }
+        function ulRender() {
+            preview.innerHTML = '';
+            inputForForm.value = '';
+            massivTest = [];
+            let cost = 0;
+            Object.values(booking).forEach(el => {
+                if (el.count != 0) {
+                    preview.innerHTML += `${el.name} x${el.count} - ${el.count * el.price}$ <br/>`;
+                    let element = `${el.name} x${el.count}`;
+                    massivTest.push(element);
+                    inputForForm.value = massivTest.join('\n');
+                    console.log(massivTest, inputForForm.value);
+                    cost += el.price * el.count;
+                };
+            });
+            mainCost.value = `${cost}`;
+            preview.innerHTML += `<span class="cost">Итог: ${cost}$</span>`;
+            proverka(cost);
+        };
+        document.querySelector('.selectDishes').onclick = function () {
+            if (menu.offsetHeight == 30) {
+                menu.style.height = '100px';
+                menuList.style.marginTop = '3px';
+                document.querySelector('.selectDishes__button').innerHTML = '-';
+            } else {
+                menu.style.height = '30px';
+                menuList.style.marginTop = '12px';
+                document.querySelector('.selectDishes__button').innerHTML = '+';
+            };
+        };
+        function x(e, count) {
+            let menuListItem = e.target.parentNode.parentNode.childNodes;
+            let name = menuListItem[1].innerHTML;
+            let price = menuListItem[3].innerHTML;
+            booking[name] = {
+                name: name,
+                price: price,
+                count: Number(count),
+            };
+        };
+        document.querySelectorAll('.pluse').forEach(el => {
+            el.onclick = function (e) {
+                e.target.parentNode.childNodes[3].innerHTML = Number(e.target.parentNode.childNodes[3].innerHTML) + 1;
+                let count = e.target.parentNode.childNodes[3].innerHTML;
+                x(e, count);
+                ulRender();
+            };
+        });
+        document.querySelectorAll('.minus').forEach(el => {
+            el.onclick = function (e) {
+                let count = e.target.parentNode.childNodes[3].innerHTML;
+                if (count > 0) {
+                    e.target.parentNode.childNodes[3].innerHTML = (Number(e.target.parentNode.childNodes[3].innerHTML) - 1);
+                    x(e, e.target.parentNode.childNodes[3].innerHTML);
+                    ulRender();
+                };
+            };
+        });
+    </script>
+</body>
+
+</html>
