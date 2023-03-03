@@ -10,32 +10,51 @@
 
 <body>
     <style>
+        @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;700&display=swap');
         * {
-            font-family: sans-serif;
+            font-family: 'Roboto';
             box-sizing: border-box;
         }
 
         form {
             width: 100%;
             max-width: 520px;
-            border: 1px solid black;
+            background-color: #d8f5a2;
             padding: 8px;
+        }
+        form *{
+            color:  #8d2626;
         }
 
         h3 {
+            font-weight: 700;
             text-align: center;
         }
 
         .menu {
             transition: 400ms;
-            height: 30px;
-            overflow-y: hidden;
+            height: auto;
         }
 
         input {
+            border: 0.3px rgba(0, 0, 0, 0.292) solid;
+            border-radius: 4px;
+            color: black;
+            margin-bottom: 4px;
+            height: 24px;
             width: 100%;
         }
-
+        span.reqiredStar{
+            color: red;
+        }
+        .explain{
+            margin: 0;
+            font-size: 0.8em;
+            color: #8d2626bc;
+        }
+        h4{
+            margin: 10px 0 0 0;
+        }
         .hidden {
             display: none;
             white-space: pre-wrap;
@@ -45,14 +64,14 @@
             width: 100%;
         }
 
-        .selectDishes {
-            user-select: none;
-            cursor: pointer;
+        li {
+            display: flex;
+            justify-content: space-between;
         }
 
         .menu__list {
             transition: 400ms;
-            margin-top: 12px;
+            margin-top: 2px;
         }
 
         .cost {
@@ -60,39 +79,47 @@
         }
     </style>
     <form target="test"
-        action="https://docs.google.com/forms/u/2/d/e/1FAIpQLSdi1c9XkXdp9Ea6Etd5Hix5EWpk_bjJoWufDVHLe3XFj6SpHA/formResponse">
-        <h3>Оформите заказ</h3>
+    action="https://docs.google.com/forms/u/0/d/e/1FAIpQLSdqlYqGKiBCB7tVSFpRJM3gNzUqs4DJBgBmZKsvmjYt2P4m0Q/formResponse">
         <iframe name="test" class="hidden"></iframe>
         <label for="name">Имя:</label>
-        <input type="text" id="name" class="rq" name="entry.523705913" required>
+        <input type="text" id="name" class="rq" name="entry.285044017" required>
         <label for="phone">Телефон:</label>
-        <input type="tel" id="phone" class="rq" name="entry.1051261082" required>
+        <p class="explain">Для возможности качественного обслуживания, укажите тот номер телефона, к которому привязан ваш Мессенджер, WhatsApp или Телеграм!</p>
+        <input type="tel" id="phone" class="rq" name="entry.746612629" required>
         <label for="mail">Почта:</label>
-        <input type="email" id="mail" name="entry.2024210621">
+        <input type="email" id="mail" name="entry.1822024236">
         <label for="adress">Адрес:</label>
-        <input type="text" id="adress" class="rq" name="entry.1505171548" required>
+        <p class="explain">Анталья/Коньяалты. УБЕДИТЕЛЬНАЯ ПРОСЬБА УКАЗЫВАТЬ ЭТАЖ!</p>
+        <input type="text" id="adress" name="entry.779291421">
+        <label for="location">Локация:</label>
+        <p class="explain">Скопируйте точку адреса в Яндекс или Гугл картах, вставьте копию ссылки в это поле.</p>
+        <input type="text" id="location" name="entry.757933352">
         <label for="date">Когда привезти:</label>
         <input type="date" id="date" class="rq" name="entry.1309105978" required>
         <label for="time">В какое время:</label>
+        <p class="explain">Заявка на доставку завтрака принимается не позднее 18:00 дня, предшествуещему дню доставки!</p>
         <input type="time" id="time" class="rq" name="entry.1519103396" required>
         <div class="menu">
-            <span class="selectDishes">Выберете блюда <span class="selectDishes__button">+</span></span>
+            <span class="selectDishes">Выберите позицию меню и колличество:</span>
             <ul class="menu__list"></ul>
         </div>
-        <textarea type="text" class=" hidden" name="entry.847152116"></textarea>
-        <input type="text" class="rq hidden maincost" name="entry.1245408083">
+        <textarea type="text" class=" hidden" name="entry.531976720"></textarea>
+        <input type="text" class="rq hidden maincost">
+        <label for="notes" name="entry.256796343">Примечание и предложения:</label>
+        <p class="explain">На случай если вы не сможете принять заказ сами, напишите где и кому его оставить.</p>
+        <input type="text" id="notes" name="entry.256796343">
         <h4>Ваш заказ</h4>
         <ul class="preview"></ul>
         <button class="oformit" type="submit" disabled>Оформить заказ</button>
     </form>
+
     <script>
         //Пример: "  {price:цена, name:'название'},  "
         let menuMas = [
-            {price:10,name:'Салат'},
-            {price:5.5,name:'НеСалат'},
-            {price:6,name:'Курица'},
-            {price:15,name:'НеКурица'},
-            {price:3,name:'Суп'},
+            { price: 10, name: 'Офис' },
+            { price: 5.5, name: 'Лайт' },
+            { price: 6, name: 'Фитнесс' },
+            { price: 15, name: 'Баланс' },
             /*👈Пишите слева*/
         ];
         let menu = document.querySelector('.menu');
@@ -101,18 +128,18 @@
         let preview = document.querySelector('.preview');
         let inputForForm = document.querySelector('textarea.hidden');
         let mainCost = document.querySelector('input.maincost');
-        menuMas.forEach(el =>{
+        menuMas.forEach(el => {
             let newO = document.createElement('li');
             newO.innerHTML = `
-                <li>
-                    <span class="name">${el.name}</span>
-                    <span class="price">${el.price}</span>$
-                    <span class="count">
+                    <div class="product-info">
+                        <span class="name">${el.name}</span>
+                        <span class="price">${el.price}</span>₺
+                    </div>
+                    <div class="count">
                         <button class="minus" type="button">-</button>
                         <span class="countNum">0</span>
                         <button class="pluse" type="button">+</button>
-                    </span>
-                </li>
+                    </div>
             `
             menuList.appendChild(newO);
         });
@@ -154,35 +181,34 @@
             let cost = 0;
             Object.values(booking).forEach(el => {
                 if (el.count != 0) {
-                    preview.innerHTML += `${el.name} x${el.count} - ${el.count * el.price}$ <br/>`;
-                    let element = `${el.name} x${el.count}`;
+                    preview.innerHTML += `${el.name} x${el.count} — ${el.count * el.price}₺ <br/>`;
+                    let element = `${el.name.split(/[<>]+/)[2]} x${el.count}`;
                     massivTest.push(element);
                     inputForForm.value = massivTest.join('\n');
-                    console.log(massivTest, inputForForm.value);
                     cost += el.price * el.count;
                 };
             });
             mainCost.value = `${cost}`;
-            preview.innerHTML += `<span class="cost">Итог: ${cost}$</span>`;
+            preview.innerHTML += `<span class="cost">Итог: ${cost}₺</span>`;
             proverka(cost);
         };
-        document.querySelector('.selectDishes').onclick = function () {
-            if (menu.offsetHeight == 30) {
-                menu.style.height = '100px';
-                menu.style.overflowY = 'auto';
-                menuList.style.marginTop = '3px';
-                document.querySelector('.selectDishes__button').innerHTML = '-';
-            } else {
-                menu.style.height = '30px';
-                menu.style.overflowY = 'hidden';
-                menuList.style.marginTop = '12px';
-                document.querySelector('.selectDishes__button').innerHTML = '+';
-            };
-        };
+        // document.querySelector('.selectDishes').onclick = function () {
+        //     if (menu.offsetHeight == 30) {
+        //         menu.style.height = '100px';
+        //         menu.style.overflowY = 'auto';
+        //         menuList.style.marginTop = '3px';
+        //         document.querySelector('.selectDishes__button').innerHTML = '-';
+        //     } else {
+        //         menu.style.height = '30px';
+        //         menu.style.overflowY = 'hidden';
+        //         menuList.style.marginTop = '12px';
+        //         document.querySelector('.selectDishes__button').innerHTML = '+';
+        //     };
+        // };
         function x(e, count) {
             let menuListItem = e.target.parentNode.parentNode.childNodes;
             let name = menuListItem[1].innerHTML;
-            let price = menuListItem[3].innerHTML;
+            let price = menuListItem[1].childNodes[3].innerHTML;
             booking[name] = {
                 name: name,
                 price: price,
