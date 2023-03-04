@@ -122,6 +122,11 @@
             { price: 15, name: 'Баланс' },
             /*👈Пишите слева*/
         ];
+        let site = 'https://example.com';//👈👈 Сюда вводить сайт
+
+
+
+
         let menu = document.querySelector('.menu');
         let menuList = document.querySelector('.menu__list');
         let booking = {};
@@ -147,7 +152,7 @@
             target.innerHTML = '<b>Заказ оформлен</b>';
             setTimeout(() => {
                 target.innerHTML = 'Оформить заказ';
-                location.reload();
+                location.href = site;
             }, 2000);
         };
         for (let i = 0; i < document.querySelectorAll('input').length; i++) {
@@ -192,19 +197,6 @@
             preview.innerHTML += `<span class="cost">Итог: ${cost}₺</span>`;
             proverka(cost);
         };
-        // document.querySelector('.selectDishes').onclick = function () {
-        //     if (menu.offsetHeight == 30) {
-        //         menu.style.height = '100px';
-        //         menu.style.overflowY = 'auto';
-        //         menuList.style.marginTop = '3px';
-        //         document.querySelector('.selectDishes__button').innerHTML = '-';
-        //     } else {
-        //         menu.style.height = '30px';
-        //         menu.style.overflowY = 'hidden';
-        //         menuList.style.marginTop = '12px';
-        //         document.querySelector('.selectDishes__button').innerHTML = '+';
-        //     };
-        // };
         function x(e, count) {
             let menuListItem = e.target.parentNode.parentNode.childNodes;
             let name = menuListItem[1].innerHTML;
