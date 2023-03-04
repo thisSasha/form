@@ -11,6 +11,7 @@
 <body>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;700&display=swap');
+
         * {
             font-family: 'Roboto';
             box-sizing: border-box;
@@ -22,8 +23,9 @@
             background-color: #d8f5a2;
             padding: 8px;
         }
-        form *{
-            color:  #8d2626;
+
+        form * {
+            color: #8d2626;
         }
 
         h3 {
@@ -44,17 +46,21 @@
             height: 24px;
             width: 100%;
         }
-        span.reqiredStar{
+
+        span.reqiredStar {
             color: red;
         }
-        .explain{
+
+        .explain {
             margin: 0;
             font-size: 0.8em;
             color: #8d2626bc;
         }
-        h4{
+
+        h4 {
             margin: 10px 0 0 0;
         }
+
         .hidden {
             display: none;
             white-space: pre-wrap;
@@ -79,12 +85,13 @@
         }
     </style>
     <form target="test"
-    action="https://docs.google.com/forms/u/0/d/e/1FAIpQLSdqlYqGKiBCB7tVSFpRJM3gNzUqs4DJBgBmZKsvmjYt2P4m0Q/formResponse">
+        action="https://docs.google.com/forms/u/0/d/e/1FAIpQLSdqlYqGKiBCB7tVSFpRJM3gNzUqs4DJBgBmZKsvmjYt2P4m0Q/formResponse">
         <iframe name="test" class="hidden"></iframe>
         <label for="name">Имя:</label>
         <input type="text" id="name" class="rq" name="entry.285044017" required>
         <label for="phone">Телефон:</label>
-        <p class="explain">Для возможности качественного обслуживания, укажите тот номер телефона, к которому привязан ваш Мессенджер, WhatsApp или Телеграм!</p>
+        <p class="explain">Для возможности качественного обслуживания, укажите тот номер телефона, к которому привязан
+            ваш Мессенджер, WhatsApp или Телеграм!</p>
         <input type="tel" id="phone" class="rq" name="entry.746612629" required>
         <label for="mail">Почта:</label>
         <input type="email" id="mail" name="entry.1822024236">
@@ -97,7 +104,8 @@
         <label for="date">Когда привезти:</label>
         <input type="date" id="date" class="rq" name="entry.1309105978" required>
         <label for="time">В какое время:</label>
-        <p class="explain">Заявка на доставку завтрака принимается не позднее 18:00 дня, предшествуещему дню доставки!</p>
+        <p class="explain">Заявка на доставку завтрака принимается не позднее 18:00 дня, предшествуещему дню доставки!
+        </p>
         <input type="time" id="time" class="rq" name="entry.1519103396" required>
         <div class="menu">
             <span class="selectDishes">Выберите позицию меню и колличество:</span>
@@ -114,7 +122,10 @@
     </form>
 
     <script>
-        //Пример: "  {price:цена, name:'название'},  "
+
+
+
+        //Пример: "  {price:цена, name:'название'},  "   - Это места для ввода новых типов питания и их цены
         let menuMas = [
             { price: 10, name: 'Офис' },
             { price: 5.5, name: 'Лайт' },
@@ -122,7 +133,13 @@
             { price: 15, name: 'Баланс' },
             /*👈Пишите слева*/
         ];
-        let site = 'https://example.com';//👈👈 Сюда вводить сайт
+
+        let timeMin = '08';//👈Начало работы(в часах, например 08)
+        let timeMax = '18';//👈Конец работы(в часах, например 18)
+        let dateMax = 2; //👈 На сколько дней вперёд можно делать заказ
+        let site = 'https://example.com';//👈 Сюда вводить сайт на который переходит страница
+
+        //Всё что ниже НЕ ТРОГАТЬ
 
 
 
@@ -130,9 +147,28 @@
         let menu = document.querySelector('.menu');
         let menuList = document.querySelector('.menu__list');
         let booking = {};
+        let time = document.querySelector('#time');
+        let date = document.querySelector('#date');
         let preview = document.querySelector('.preview');
         let inputForForm = document.querySelector('textarea.hidden');
         let mainCost = document.querySelector('input.maincost');
+
+        let dateVar = {
+            year: new Date().getFullYear(),
+            month: new Date().getMonth()+1,
+            day: new Date().getDay(),
+            dayMax: new Date().getDay()+dateMax,
+        };
+        console.log(`0${dateVar.month}`);
+        if(dateVar.month<10){dateVar.month = `0${dateVar.month}`};
+        if(dateVar.day<10){dateVar.day = `0${dateVar.day}`};
+        if(dateVar.dayMax<10){dateVar.dayMax = `0${dateVar.dayMax}`};
+
+        date.min = `${dateVar.year}-${dateVar.month}-${dateVar.day}`;
+        date.max = `${dateVar.year}-${dateVar.month}-${dateVar.dayMax}`;
+        time.min = timeMin+':00';
+        time.max = timeMax+':00';
+
         menuMas.forEach(el => {
             let newO = document.createElement('li');
             newO.innerHTML = `
@@ -171,9 +207,13 @@
             };
             let re = /^[\d\+][\d\(\)\ -]{4,14}\d$/;
             let myPhone = document.getElementById('phone').value;
-            let valid = re.test(myPhone);
+            let validPhone = re.test(myPhone);
+            console.log(date.min,date.value,date.max);
+            console.log(time.value > time.min && time.value < time.max);
+            console.log(date.min && date.value < date.max);
+            console.log(x == 0 && validPhone && cost != 0)
             document.querySelector('.oformit').disabled = false;
-            if (x == 0 && valid && cost != 0) {
+            if (x == 0 && validPhone && cost != 0 && date.value > date.min && date.value < date.max && time.value > time.min && time.value < time.max ) {
                 document.querySelector('.oformit').disabled = false;
             } else {
                 document.querySelector('.oformit').disabled = true;
